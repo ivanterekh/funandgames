@@ -4,7 +4,7 @@ import WordleGame from "@/components/Wordle/WordleGame.vue";
 
 <template>
   <div>
-    <div>Wordle will be here</div>
+    <div>Have a good game!</div>
     <WordleGame />
   </div>
 </template>

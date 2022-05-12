@@ -1,4 +1,4 @@
-import {words} from "@/games/EnglishWordList";
+import { words } from "@/games/EnglishWordList";
 
 enum LetterStatus {
   Correct = "correct",
@@ -31,6 +31,8 @@ export class WordleGame {
     this.allowedWords = words.filter((w: string) => w.length == this.wordLen);
     this.word =
       this.allowedWords[Math.floor(Math.random() * this.allowedWords.length)];
+
+    console.log('The word is "' + this.word + '"');
   }
 
   checkWord() {
@@ -48,11 +50,23 @@ export class WordleGame {
       return;
     }
 
+    let leftLetters: string = this.word;
     this.rows[this.currRow].letters.forEach((field, idx) => {
       if (field.letter == this.word.charAt(idx)) {
         field.status = LetterStatus.Correct;
+        leftLetters = leftLetters.replace(field.letter, "");
       } else {
         field.status = LetterStatus.Incorrect;
+      }
+    });
+
+    this.rows[this.currRow].letters.forEach((field) => {
+      if (
+        field.status == LetterStatus.Incorrect &&
+        leftLetters.includes(field.letter)
+      ) {
+        field.status = LetterStatus.Exists;
+        leftLetters = leftLetters.replace(field.letter, "");
       }
     });
 
@@ -72,8 +86,6 @@ export class WordleGame {
     this.rows[this.currRow].letters[this.currLetter].letter =
       letter.toLowerCase();
     this.currLetter++;
-
-    console.log(this.rows);
   }
 
   popLetter() {
@@ -81,7 +93,7 @@ export class WordleGame {
       return;
     }
 
-    this.rows[this.currRow].letters[this.currLetter].letter = " ";
     this.currLetter--;
+    this.rows[this.currRow].letters[this.currLetter].letter = " ";
   }
 }
